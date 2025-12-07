@@ -1,0 +1,37 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // Kita pakai SQLite agar mudah (bisa ganti mysql/postgresql)
+  url      = env("DATABASE_URL")
+}
+
+
+model Division {
+  id        Int         @id @default(autoincrement())
+  name      String      @unique
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  
+
+  candidates Candidate[] 
+}
+
+
+model Candidate {
+  id          Int      @id @default(autoincrement())
+  name        String
+  nim         String   @unique
+  gpa         Float
+  photo       String?  
+  
+
+  divisionId  Int
+  division    Division @relation(fields: [divisionId], references: [id])
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
